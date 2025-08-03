@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'type',
         'password',
     ];
 
@@ -33,6 +35,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (User $model) {
+            $model->password = $model->email;
+            $model->email_verified_at = now();
+        });
+    }
 
     /**
      * Get the attributes that should be cast.
