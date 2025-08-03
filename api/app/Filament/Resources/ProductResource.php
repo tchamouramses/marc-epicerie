@@ -5,16 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
-use App\Models\SubCategory;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -30,23 +24,35 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('price')->required()->integer(),
-                TextInput::make('quantity')->required()->integer(),
-                Select::make('rate')->required()->options([
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5'
-                ]),
-                TextInput::make('discount')->nullable()->numeric(),
-                TextInput::make('min_quantity')->label('Alert quantity')->required()->integer(),
-                Textarea::make('description')->nullable(),
-                Select::make('sub_category_id')->label('Sub Category')
+                Forms\Components\TextInput::make('name')
                     ->required()
-                    ->options(SubCategory::all()->pluck('name', 'id'))
-                    ->searchable()
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->numeric()
+                    ->prefix('€'),
+                Forms\Components\TextInput::make('rate')
+                    ->required()
+                    ->numeric()
+                    ->default(1),
+                Forms\Components\TextInput::make('discount')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('quantity')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('min_quantity')
+                    ->required()
+                    ->numeric()
+                    ->default(5),
+                Forms\Components\Select::make('sub_category_id')
+                    ->relationship('subCategory', 'name')
+                    ->required(),
+                Forms\Components\Textarea::make('description')
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -54,23 +60,42 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('code')->searchable(),
-                TextColumn::make('rate'),
-                TextColumn::make('subCategory.name')->label('Sub Category'),
-                TextColumn::make('price'),
-                TextColumn::make('quantity'),
-                TextColumn::make('min_quantity')->label('Alert quantity'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('code')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('rate')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('discount')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('min_quantity')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('subCategory.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('sub_category_id')
-                    ->label('Sub category')
-                    ->options(fn(): array => SubCategory::query()->pluck('name', 'id')->all())
-                    ->searchable()
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -79,10 +104,19 @@ class ProductResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageProducts::route('/'),
+            'index' => Pages\ListProducts::route('/'),
+            'create' => Pages\CreateProduct::route('/create'),
+            'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
 }

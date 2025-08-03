@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
+            // $table->string('image_path');
             $table->text('description');
             $table->unsignedBigInteger('price');
             $table->unsignedInteger('rate')->default(1);
