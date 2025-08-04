@@ -45,7 +45,7 @@ class SettingResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-            ]);
+            ])->paginated(false);
     }
 
     public static function getRelations(): array
