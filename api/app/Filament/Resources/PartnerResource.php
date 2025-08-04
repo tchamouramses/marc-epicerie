@@ -29,6 +29,7 @@ class PartnerResource extends Resource
                 Select::make('type')->options([
                     PartnerTypeEnum::Fournisseur->value => 'Fournisseur'
                 ])->native(false)
+                    ->columnSpanFull()
             ]);
     }
 
@@ -38,7 +39,8 @@ class PartnerResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable(),
-                TextColumn::make('type')
+                TextColumn::make('type'),
+                TextColumn::make('created_at')->dateTime(),
             ])
             ->filters([
                 //
