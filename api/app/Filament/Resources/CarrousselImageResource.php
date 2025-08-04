@@ -21,10 +21,14 @@ class CarrousselImageResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\FileUpload::make('path')
+                    ->image()->imageEditor()
+                    ->label('Image')
+                    ->columnSpanFull()
+                    ->directory('carroussel'),
                 Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('path')
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull()
             ]);
     }
 
@@ -32,9 +36,9 @@ class CarrousselImageResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('path'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('path'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),

@@ -23,6 +23,11 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\FileUpload::make('image_path')
+                    ->image()->imageEditor()
+                    ->label('Product Image')
+                    ->columnSpanFull()
+                    ->directory('products'),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->columnSpanFull(),
@@ -59,6 +64,7 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image_path'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('code')
@@ -67,9 +73,11 @@ class ProductResource extends Resource
                     ->money()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rate')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('discount')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
