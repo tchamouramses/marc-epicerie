@@ -27,8 +27,10 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')->required()
+                    ->columnSpanFull(),
                 Textarea::make('description')->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -38,6 +40,8 @@ class CategoryResource extends Resource
             ->columns([
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime(),
             ])
             ->filters([
                 //

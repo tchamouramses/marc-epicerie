@@ -31,11 +31,12 @@ class SubCategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->required(),
-                Textarea::make('description')->nullable(),
                 Select::make('category_id')->label('Category')
                 ->required()
                 ->options(Category::all()->pluck('name', 'id'))
-                ->searchable()
+                ->searchable(),
+                Textarea::make('description')->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -46,6 +47,8 @@ class SubCategoryResource extends Resource
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('category.name')->label('Category'),
                 TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime(),
             ])
             ->filters([
                 SelectFilter::make('category_id')
