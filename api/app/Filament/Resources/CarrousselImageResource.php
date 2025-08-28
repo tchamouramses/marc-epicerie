@@ -28,6 +28,9 @@ class CarrousselImageResource extends Resource
                     ->directory('carroussel'),
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->columnSpanFull(),
+                Forms\Components\RichEditor::make('label')
+                    ->required()
                     ->columnSpanFull()
             ]);
     }
@@ -39,6 +42,9 @@ class CarrousselImageResource extends Resource
                 Tables\Columns\ImageColumn::make('path'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('label')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
@@ -47,7 +53,10 @@ class CarrousselImageResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->iconButton(),
+                Tables\Actions\DeleteAction::make()
+                ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class OrderResource extends Resource
 {
@@ -76,7 +77,10 @@ class OrderResource extends Resource
                 ])
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -107,5 +111,17 @@ class OrderResource extends Resource
     public static function getNavigationBadgeTooltip(): ?string
     {
         return 'undelivered order';
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'user name' => $record->user->name,
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['user.name'];
     }
 }

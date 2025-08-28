@@ -28,9 +28,9 @@ class SubCategoryResource extends Resource
             ->schema([
                 TextInput::make('name')->required(),
                 Select::make('category_id')->label('Category')
-                ->required()
-                ->options(Category::all()->pluck('name', 'id'))
-                ->searchable(),
+                    ->required()
+                    ->options(Category::all()->pluck('name', 'id'))
+                    ->searchable(),
                 Textarea::make('description')->nullable()
                     ->columnSpanFull(),
             ]);
@@ -53,8 +53,10 @@ class SubCategoryResource extends Resource
                     ->searchable()
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

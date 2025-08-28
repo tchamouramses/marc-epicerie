@@ -42,10 +42,12 @@ class SettingResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton(),
             ])
-            ->bulkActions([
-            ])->paginated(false);
+            ->bulkActions([])->paginated(false);
     }
 
     public static function getRelations(): array
